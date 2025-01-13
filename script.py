@@ -107,7 +107,7 @@ if __name__ == "__main__":
     # Example usage
 
     # Paths to HTML files
-    html_file_paths = ["سيستم آموزشیار - دانشجویی.html","سيستم آموزشیار - دانشجویی2.html"]  # Add more file paths as needed
+    html_file_paths = ["html-pages/page1.html","html-pages/page2.html"]  # Add more file paths as needed
 
 
     # Course codes to filter
