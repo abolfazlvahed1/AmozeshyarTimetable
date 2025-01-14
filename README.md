@@ -15,21 +15,26 @@ Once pip is installed, you can install BeautifulSoup using:
 pip install beautifulsoup4
 ```
 
+---
+
 ## Usage
 
 To use this script, follow these steps:
 
-1. **Download HTML Files**: First, download the HTML files of the courses offered from Amozeshyar. You can access it at `https://eserv.iau.ir/EServices/pSearchAction.do`. Search for your group's offered courses and download the HTML files. If there are multiple pages, download all of them.
+1. **Clone this repository**:
+```sh
+git clone https://github.com/abolfazlvahed1/AmozeshyarTimetable.git
+```
+2. **Download HTML Files**: 
+   First, download the HTML files of the courses offered from Amozeshyar. You can access it at `https://eserv.iau.ir/EServices/pSearchAction.do`. Search for your group's offered courses and download the HTML files. If there are multiple pages, download all of them.
 
-2. **Specify HTML File Paths**: Add the paths to your downloaded HTML files in the `html_file_paths` list. For example:
-    ```python
-    # Paths to HTML files
-    html_file_paths = ["/path/to/downloaded/html/page1.html", "/path/to/downloaded/html/page2.html"]
-    ```
+   Alternatively, if you prefer to automate the process of downloading all the necessary HTML files, I've created another project that crawls Amozeshyar and fetches all HTML files for you. You can find the repository for that project [here](https://github.com/abolfazlvahed1/AmozeshyarCourseScraper). This tool will automatically retrieve all HTML pages you need for this script.
 
-    I've included `page1.html` and `page2.html` for the computer engineering group in the repository, but you can change these to your own paths.
+3. **Specify HTML Folder Path**: 
+   Place all the downloaded HTML files in a folder (e.g., `html-pages/`). You do not need to specify individual file paths. The script will automatically process all `.html` files in the folder.
 
-3. **Define Course Codes**: Add the course codes you want to filter in the `course_codes` set. For example:
+4. **Define Course Codes** (Optional): 
+   If you only want to filter specific courses by their course codes, define the course codes in the `course_codes` set. For example:
     ```python
     # Course codes to filter
     course_codes = {
@@ -38,13 +43,15 @@ To use this script, follow these steps:
         "4628164737", "4628153620", "4628155511"
     }
     ```
+   If the `course_codes` set is empty, the script will include all courses available in the HTML files.
 
-4. **Run the Script**: Execute the script by running the following command:
+4. **Run the Script**: 
+   Execute the script by running the following command:
     ```sh
-    python \path\to\script.py
+    python /path/to/script.py
     ```
 
-    This will generate a file named `schedule_output.txt` in the current directory, containing the weekly schedule.
+   This will generate a file named `schedule_output.txt` in the current directory, containing the weekly schedule.
 
 Example of `schedule_output.txt`:
 ```
@@ -78,4 +85,6 @@ Example of `schedule_output.txt`:
 
 ## Notes
 
-- This script does not guarantee that it will contain all courses if the structure of the HTML files in Amozeshyar changes or if there are any problems with the HTML files.
+- This script processes all `.html` files in the specified folder. Ensure all the course HTML files are placed within that folder.
+- If no course codes are provided, the script will include all available courses.
+- If the structure of the HTML files in Amozeshyar changes, or if there are issues with the HTML files, the script may not work as expected.

@@ -2,24 +2,31 @@ import os
 from bs4 import BeautifulSoup
 from collections import defaultdict
 
-def parse_html_files(file_paths, course_codes):
+
+# Mapping of abbreviated day names to full names for "سه" and "پنج"
+day_mapping = {
+    "سه": "سه شنبه",
+    "پنج": "پنج شنبه"
+}
+
+def parse_html_files(folder_path, course_codes):
     """
-    Parse multiple HTML files to extract course data for specified course codes.
+    Parse all HTML files in the specified folder to extract course data.
 
     Args:
-        file_paths (list): List of paths to HTML files.
-        course_codes (set): Set of course codes to filter data.
+        folder_path (str): Path to the folder containing HTML files.
+        course_codes (set): Set of course codes to filter data. If empty, include all courses.
 
     Returns:
         dict: A dictionary representing the weekly schedule.
     """
     all_courses = []
+    file_paths = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith(".html")]
 
     # Process each file
     for file_path in file_paths:
         with open(file_path, "rb") as file:  # Open in binary mode
             try:
-                # Decode content to UTF-8, replacing invalid bytes
                 content = file.read().decode("utf-8", errors="replace")
                 soup = BeautifulSoup(content, "html.parser")
 
@@ -49,8 +56,8 @@ def parse_html_files(file_paths, course_codes):
         return {}
 
     # Extract headers and filter valid rows
-    headers = all_courses[0]
-    data_rows = all_courses[1:]
+    headers = all_courses[0]  # The first row is treated as headers
+    data_rows = all_courses[1:]  # Skip the header row
 
     columns = {
         "course_code": headers.index("كد درس"),
@@ -61,32 +68,59 @@ def parse_html_files(file_paths, course_codes):
         "practical_units": headers.index("تعداد واحد عملي"),
     }
 
-    # Filter rows based on course codes and clean data
     filtered_courses = []
     for row in data_rows:
         if len(row) > max(columns.values()):
             course_code = row[columns["course_code"]]
-            if course_code in course_codes:
-                total_units = (
-                    int(row[columns["theory_units"]] or 0) + int(row[columns["practical_units"]] or 0)
-                )
+            if not course_codes or course_code in course_codes:  # Include all courses if course_codes is empty
+                try:
+                    total_units = (
+                        float(row[columns["theory_units"]] or 0) + float(row[columns["practical_units"]] or 0)
+                    )
+                except ValueError:
+                    # Handle invalid data gracefully by skipping the row
+                    # print(f"Invalid unit data in row: {row}")
+                    continue
+
                 filtered_courses.append({
                     "course_code": course_code,
                     "course_name": row[columns["course_name"]],
-                    "day_time": row[columns["day_time"]],
-                    "professor": row[columns["professor"]],
+                    "day_time": row[columns["day_time"]] or "زمان نامشخص",
+                    "professor": row[columns["professor"]] or "خالی",
                     "total_units": total_units,
                 })
 
     # Organize courses by weekdays
     weekly_schedule = defaultdict(list)
     for course in filtered_courses:
-        weekday = course["day_time"].split(" ")[0]
-        weekly_schedule[weekday].append(course)
+        day_time = course["day_time"]
+        if day_time == "زمان نامشخص":
+            weekly_schedule["نامشخص"].append(course)
+        else:
+            # Use the day mapping to get the full name of the day
+            weekday = day_time.split(" ")[0]  # Get the first part, which is the day name (e.g., "سه")
+            full_day_name = day_mapping.get(weekday, weekday)  # Keep the day name unchanged unless it's "سه" or "پنج"
+            weekly_schedule[full_day_name].append(course)
 
-    return weekly_schedule
-def pad_string(s, length):
-    return s + ' ' * (length - len(unicodedata.normalize('NFC', s)))
+    # Ensure the order of days in the schedule
+    ordered_schedule = {
+        "شنبه": [],
+        "يكشنبه": [],
+        "دوشنبه": [],
+        "سه شنبه": [],
+        "چهارشنبه": [],
+        "پنج شنبه": [],
+        "جمعه": [],
+        "نامشخص": [],
+    }
+
+    # Sort courses into the correct day order
+    for day in ordered_schedule:
+        ordered_schedule[day] = weekly_schedule.get(day, [])
+
+    return ordered_schedule
+
+
 def write_schedule_to_file(weekly_schedule, output_file):
     """
     Write the weekly schedule to a file.
@@ -104,21 +138,15 @@ def write_schedule_to_file(weekly_schedule, output_file):
                 )
 
 if __name__ == "__main__":
-    # Example usage
-
-    # Paths to HTML files
-    html_file_paths = ["html-pages/page1.html","html-pages/page2.html"]  # Add more file paths as needed
-
-
+    html_folder_path = "html-pages"
     # Course codes to filter
     course_codes = {
         "4628101485", "4628101498", "4628103010", "4628105776", "4628119144",
         "4628130407", "4628135451", "4628137064", "4628164617", "4628148579",
         "4628164737", "4628153620", "4628155511"
     }
-
     # Parse HTML files and generate the schedule
-    schedule = parse_html_files(html_file_paths, course_codes)
+    schedule = parse_html_files(html_folder_path, course_codes)
 
     # Write the schedule to a file
     output_file = "schedule_output.txt"
