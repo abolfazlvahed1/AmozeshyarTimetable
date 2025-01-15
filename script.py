@@ -134,7 +134,7 @@ def write_schedule_to_file(weekly_schedule, output_file):
             file.write(f"\n{day}:\n")
             for course in courses:
                 file.write(
-                    f"{course['course_name']}: {course['day_time']} ({course['professor']}) - {course['total_units']} واحد\n"
+                    f"{course['course_name']}: {course['day_time']} ({course['professor']}) - ({course ['course_code']}) - {course['total_units']} واحد\n"
                 )
 
 if __name__ == "__main__":
