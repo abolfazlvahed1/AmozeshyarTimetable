@@ -69,7 +69,10 @@ def parse_html_files(folder_path, course_codes):
             "theory_units": headers.index("تعداد واحد نظري"),
             "practical_units": headers.index("تعداد واحد عملي"),
             "class_name": headers.index("نام كلاس درس"),
-            "section": headers.index("مقطع ارائه درس")
+            "section": headers.index("مقطع ارائه درس"),
+            "class_code": headers.index("كد ارائه کلاس درس"),
+            "exam": headers.index("زمان امتحان"),
+            "place": headers.index("مكان برگزاري"),
         }
     except ValueError as e:
         print(f"Required column not found in headers: {e}")
@@ -96,6 +99,9 @@ def parse_html_files(folder_path, course_codes):
                     "total_units": total_units,
                     "class_name": row[columns["class_name"]] or "  ",
                     "section": row[columns["section"]] or "  ",
+                    "class_code": row[columns["class_code"]] or "  ",
+                    "exam": row[columns["exam"]] or "  ",
+                    "place": row[columns["place"]] or "  ",
                 })
 
     # Organize courses by weekdays
@@ -133,13 +139,14 @@ def parse_html_files(folder_path, course_codes):
 
 def write_schedule_to_file(weekly_schedule, output_file):
     """
-    Write the weekly schedule to a file.
+    Write the weekly schedule to both text and HTML files.
 
     Args:
         weekly_schedule (dict): The weekly schedule.
-        output_file (str): Path to the output file.
+        output_file (str): Path to the output file (without extension).
     """
-    with open(output_file, "w", encoding="utf-8") as file:
+    # Write text file
+    with open(f"{output_file}.txt", "w", encoding="utf-8") as file:
         for day, courses in weekly_schedule.items():
             if courses:  # Only write days that have courses
                 file.write(f"\n{day}:\n")
@@ -149,6 +156,84 @@ def write_schedule_to_file(weekly_schedule, output_file):
                         f"{course['course_code']} - {course['total_units']} واحد - "
                         f"{course['class_name']} - {course['section']}\n"
                     )
+
+    # Write HTML file
+    html_content = """
+    <!DOCTYPE html>
+    <html dir="rtl" lang="fa">
+    <head>
+        <meta charset="UTF-8">
+        <title>برنامه هفتگی</title>
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin: 20px 0;
+            }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: right;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            h2 {
+                color: #333;
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+    """
+
+    for day, courses in weekly_schedule.items():
+        if courses:  # Only write days that have courses
+            html_content += f"<h2>{day}</h2>\n"
+            html_content += """
+            <table>
+                <tr>
+                    <th>نام درس</th>
+                    <th>کد درس</th>
+                    <th>زمان کلاس</th>
+                    <th>استاد</th>
+                    <th>تعداد واحد</th>
+                    <th>نام کلاس</th>
+                    <th>مقطع</th>
+                    <th>کد ارائه</th>
+                    <th>زمان امتحان</th>
+                    <th>مکان برگزاری</th>
+                </tr>
+            """
+
+            for course in courses:
+                html_content += f"""
+                <tr>
+                    <td>{course['course_name']}</td>
+                    <td>{course['course_code']}</td>
+                    <td>{course['day_time']}</td>
+                    <td>{course['professor']}</td>
+                    <td>{course['total_units']}</td>
+                    <td>{course['class_name']}</td>
+                    <td>{course['section']}</td>
+                    <td>{course['class_code']}</td>
+                    <td>{course['exam']}</td>
+                    <td>{course['place']}</td>
+                </tr>
+                """
+
+            html_content += "</table>\n"
+
+    html_content += """
+    </body>
+    </html>
+    """
+
+    with open(f"{output_file}.html", "w", encoding="utf-8") as file:
+        file.write(html_content)
 
 if __name__ == "__main__":
     html_folder_path = "html-pages"
