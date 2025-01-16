@@ -26,8 +26,10 @@ To use this script, follow these steps:
 git clone https://github.com/abolfazlvahed1/AmozeshyarTimetable.git
 ```
 2. **Download HTML Files**: 
-   First, download the HTML files of the courses offered from Amozeshyar. You can access it at `https://eserv.iau.ir/EServices/pSearchAction.do`. Search for your group's offered courses and download the HTML files. If there are multiple pages, download all of them.
+   If you are part of the computer group of Tehran Markaz, all offered courses have already been downloaded for you, so you can skip this step.
 
+   For others, visit https://eserv.iau.ir/EServices/pSearchAction.do, search for your group's offered courses, and download all HTML files. If there are multiple pages, ensure you download all of them.
+  
    Alternatively, if you prefer to automate the process of downloading all the necessary HTML files, I've created another project that crawls Amozeshyar and fetches all HTML files for you. You can find the repository for that project [here](https://github.com/abolfazlvahed1/AmozeshyarCourseScraper). This tool will automatically retrieve all HTML pages you need for this script.
 
 3. **Specify HTML Folder Path**: 
@@ -55,32 +57,29 @@ git clone https://github.com/abolfazlvahed1/AmozeshyarTimetable.git
 
 Example of `schedule_output.txt`:
 ```
-چهارشنبه:
-تعامل انسان و کامپیوتر: چهارشنبه  از 15:40 تا 16:10 (محمد مهدی متولی) - 3 واحد
-هوش مصنوعی و سیستم های خبره: چهارشنبه  از 09:45 تا 12:15 (محمدامین بنی ادم) - 3 واحد
-طراحی کامپیوتری سیستمهای دیجیتال: چهارشنبه  از 07:15 تا 09:45 (محمد صادقی) - 3 واحد
-
 شنبه:
-هوش مصنوعی و سیستم های خبره: شنبه  از 13:00 تا 15:40 (رامین رهنمون) - 3 واحد
-طراحی الگوریتم‌ها: شنبه  از 07:15 تا 09:45 (سید مهرداد تناوش) - 3 واحد
-
-پنج:
-آزمایشگاه پایگاه داده: پنج شنبه  از 14:40 تا 16:10 (سيدفريد سيف السادات) - 1 واحد
-هوش مصنوعی و سیستم های خبره: پنج شنبه  از 13:00 تا 15:40 (حسین علیزاده) - 3 واحد
-
-دوشنبه:
-آزمایشگاه شبکه ‌های‌ کامپیوتری‌: دوشنبه  از 16:20 تا 17:50 (تورج بنی رستم) - 1 واحد
-مهندسی نرم افزار: دوشنبه  از 07:15 تا 09:45 (مهرشید جوانبخت) - 3 واحد
+هوش مصنوعی و سیستم های خبره: شنبه  از 13:00 تا 15:40 (رامین رهنمون) - 3.0 واحد
+طراحی الگوریتم‌ها: شنبه  از 07:15 تا 09:45 (سید مهرداد تناوش) - 3.0 واحد
 
 يكشنبه:
-آزمایشگاه شبکه ‌های‌ کامپیوتری‌: يكشنبه  از 16:20 تا 17:50 (نجمه ترابیان) - 1 واحد
-مدیریت پروژه های فناوری اطلاعات: يكشنبه  از 13:00 تا 15:40 (محمدعلی یوسفی) - 3 واحد
-نظریه زبان‌ها و ماشین‌ها: يكشنبه  از 09:45 تا 12:15 (مهرشید جوانبخت) - 3 واحد
-نظریه زبان‌ها و ماشین‌ها: يكشنبه  از 07:15 تا 09:45 (مهرشید جوانبخت) - 3 واحد
+زبان‌ تخصصی‌: يكشنبه  از 15:40 تا 18:10 (سیدرضا وزیری یزدی) - 2.0 واحد
+نظریه زبان‌ها و ماشین‌ها: يكشنبه  از 07:15 تا 09:45 (مهرشید جوانبخت) - 3.0 واحد
 
-سه:
-آزمایشگاه پایگاه داده: سه شنبه  از 14:40 تا 16:10 (اعظم شکاری شهرک) - 1 واحد
-مهندسی نرم افزار: سه شنبه  از 07:15 تا 09:45 (مهرشید جوانبخت) - 3 واحد
+دوشنبه:
+آزمایشگاه شبکه ‌های‌ کامپیوتری‌: دوشنبه  از 16:20 تا 17:50 (تورج بنی رستم) - 1.0 واحد
+آزمایشگاه شبکه ‌های‌ کامپیوتری‌: دوشنبه  از 14:40 تا 16:10 (تورج بنی رستم) - 1.0 واحد
+آزمایشگاه شبکه ‌های‌ کامپیوتری‌: دوشنبه  از 13:00 تا 14:30 (تورج بنی رستم) - 1.0 واحد
+مهندسی نرم افزار: دوشنبه  از 07:15 تا 09:45 (مهرشید جوانبخت) - 3.0 واحد
+
+سه شنبه:
+مهندسی نرم افزار: سه شنبه  از 07:15 تا 09:45 (مهرشید جوانبخت) - 3.0 واحد
+
+چهارشنبه:
+تعامل انسان و کامپیوتر: چهارشنبه  از 15:40 تا 16:10 (محمد مهدی متولی) - 3.0 واحد
+
+پنج شنبه:
+آزمایشگاه پایگاه داده: پنج شنبه  از 14:40 تا 16:10 (سيدفريد سيف السادات) - 1.0 واحد
+هوش مصنوعی و سیستم های خبره: پنج شنبه  از 13:00 تا 15:40 (حسین علیزاده) - 3.0 واحد
 ```
 
 ## Notes

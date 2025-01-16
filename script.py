@@ -20,7 +20,9 @@ def parse_html_files(folder_path, course_codes):
     Returns:
         dict: A dictionary representing the weekly schedule.
     """
-    all_courses = []
+    headers = None  # Initialize headers as None
+    data_rows = []  # Store all data rows
+
     file_paths = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith(".html")]
 
     # Process each file
@@ -30,64 +32,70 @@ def parse_html_files(folder_path, course_codes):
                 content = file.read().decode("utf-8", errors="replace")
                 soup = BeautifulSoup(content, "html.parser")
 
-                # Locate the table inside the specified div
-                table_container = soup.find("div", id="tableContainer")
-                if not table_container:
-                    print(f"No table container found in {file_path}")
-                    continue
 
-                table = table_container.find("table", id="scrollable")
+                table = soup.find("table", id="scrollable")
                 if not table:
                     print(f"No table found in {file_path}")
                     continue
 
                 # Extract data from the table
                 rows = table.find_all("tr")
-                for row in rows:
+                for i, row in enumerate(rows):
                     cells = row.find_all(["td", "th"])
                     cell_values = [cell.get_text(strip=True) for cell in cells]
-                    all_courses.append(cell_values)
+                    
+                    if i == 0:  # First row contains headers
+                        if headers is None:  # Only set headers if not already set
+                            headers = cell_values
+                    else:
+                        if len(cell_values) == len(headers):  # Only add rows with correct number of columns
+                            data_rows.append(cell_values)
+
             except Exception as e:
                 print(f"Error processing {file_path}: {e}")
                 continue
 
-    if not all_courses:
+    if not headers or not data_rows:
         print("No course data found.")
         return {}
 
-    # Extract headers and filter valid rows
-    headers = all_courses[0]  # The first row is treated as headers
-    data_rows = all_courses[1:]  # Skip the header row
-
-    columns = {
-        "course_code": headers.index("كد درس"),
-        "course_name": headers.index("نام درس"),
-        "day_time": headers.index("زمانبندي تشکيل کلاس"),
-        "professor": headers.index("استاد"),
-        "theory_units": headers.index("تعداد واحد نظري"),
-        "practical_units": headers.index("تعداد واحد عملي"),
-    }
+    # Create column index mapping
+    try:
+        columns = {
+            "course_code": headers.index("كد درس"),
+            "course_name": headers.index("نام درس"),
+            "day_time": headers.index("زمانبندي تشکيل کلاس"),
+            "professor": headers.index("استاد"),
+            "theory_units": headers.index("تعداد واحد نظري"),
+            "practical_units": headers.index("تعداد واحد عملي"),
+            "class_name": headers.index("نام كلاس درس"),
+            "section": headers.index("مقطع ارائه درس")
+        }
+    except ValueError as e:
+        print(f"Required column not found in headers: {e}")
+        return {}
 
     filtered_courses = []
     for row in data_rows:
         if len(row) > max(columns.values()):
             course_code = row[columns["course_code"]]
-            if not course_codes or course_code in course_codes:  # Include all courses if course_codes is empty
+            if not course_codes or course_code in course_codes:
                 try:
-                    total_units = (
-                        float(row[columns["theory_units"]] or 0) + float(row[columns["practical_units"]] or 0)
-                    )
+                    theory_units = float(row[columns["theory_units"]] or 0)
+                    practical_units = float(row[columns["practical_units"]] or 0)
+                    total_units = theory_units + practical_units
                 except ValueError:
-                    # Handle invalid data gracefully by skipping the row
-                    # print(f"Invalid unit data in row: {row}")
+                    print(f"Invalid unit data for course {course_code}")
                     continue
 
                 filtered_courses.append({
                     "course_code": course_code,
                     "course_name": row[columns["course_name"]],
                     "day_time": row[columns["day_time"]] or "زمان نامشخص",
-                    "professor": row[columns["professor"]] or "خالی",
+                    "professor": row[columns["professor"]] or "  ",
                     "total_units": total_units,
+                    "class_name": row[columns["class_name"]] or "  ",
+                    "section": row[columns["section"]] or "  ",
                 })
 
     # Organize courses by weekdays
@@ -97,10 +105,12 @@ def parse_html_files(folder_path, course_codes):
         if day_time == "زمان نامشخص":
             weekly_schedule["نامشخص"].append(course)
         else:
-            # Use the day mapping to get the full name of the day
-            weekday = day_time.split(" ")[0]  # Get the first part, which is the day name (e.g., "سه")
-            full_day_name = day_mapping.get(weekday, weekday)  # Keep the day name unchanged unless it's "سه" or "پنج"
-            weekly_schedule[full_day_name].append(course)
+            try:
+                weekday = day_time.split(" ")[0]  # Get the first part (day name)
+                full_day_name = day_mapping.get(weekday, weekday)
+                weekly_schedule[full_day_name].append(course)
+            except IndexError:
+                weekly_schedule["نامشخص"].append(course)
 
     # Ensure the order of days in the schedule
     ordered_schedule = {
@@ -131,11 +141,14 @@ def write_schedule_to_file(weekly_schedule, output_file):
     """
     with open(output_file, "w", encoding="utf-8") as file:
         for day, courses in weekly_schedule.items():
-            file.write(f"\n{day}:\n")
-            for course in courses:
-                file.write(
-                    f"{course['course_name']}: {course['day_time']} ({course['professor']}) - ({course ['course_code']}) - {course['total_units']} واحد\n"
-                )
+            if courses:  # Only write days that have courses
+                file.write(f"\n{day}:\n")
+                for course in courses:
+                    file.write(
+                        f"{course['course_name']}: {course['day_time']} ({course['professor']}) - "
+                        f"{course['course_code']} - {course['total_units']} واحد - "
+                        f"{course['class_name']} - {course['section']}\n"
+                    )
 
 if __name__ == "__main__":
     html_folder_path = "html-pages"
@@ -143,8 +156,10 @@ if __name__ == "__main__":
     course_codes = {
         "4628101485", "4628101498", "4628103010", "4628105776", "4628119144",
         "4628130407", "4628135451", "4628137064", "4628164617", "4628148579",
-        "4628164737", "4628153620", "4628155511"
+        "4628164737", "4628153620", "4628155511","90763","90610","99079","90881",
+        "90763","99083"
     }
+    
     # Parse HTML files and generate the schedule
     schedule = parse_html_files(html_folder_path, course_codes)
 
