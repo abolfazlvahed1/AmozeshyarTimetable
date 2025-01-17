@@ -35,17 +35,6 @@ git clone https://github.com/abolfazlvahed1/AmozeshyarTimetable.git
 3. **Specify HTML Folder Path**: 
    Place all the downloaded HTML files in a folder (e.g., `html-pages/`). You do not need to specify individual file paths. The script will automatically process all `.html` files in the folder.
 
-4. **Define Course Codes** (Optional): 
-   If you only want to filter specific courses by their course codes, define the course codes in the `course_codes` set. For example:
-    ```python
-    # Course codes to filter
-    course_codes = {
-        "4628101485", "4628101498", "4628103010", "4628105776", "4628119144",
-        "4628130407", "4628135451", "4628137064", "4628164617", "4628148579",
-        "4628164737", "4628153620", "4628155511"
-    }
-    ```
-   If the `course_codes` set is empty, the script will include all courses available in the HTML files.
 
 4. **Run the Script**: 
    Execute the script by running the following command:
@@ -53,37 +42,15 @@ git clone https://github.com/abolfazlvahed1/AmozeshyarTimetable.git
     python /path/to/script.py
     ```
 
-   This will generate a file named `schedule_output.txt` in the current directory, containing the weekly schedule.
+   This will generate a html with file named `schedule_output.html` in the current directory, containing a html that can see all course.
 
-Example of `schedule_output.txt`:
-```
-شنبه:
-هوش مصنوعی و سیستم های خبره: شنبه  از 13:00 تا 15:40 (رامین رهنمون) - 3.0 واحد
-طراحی الگوریتم‌ها: شنبه  از 07:15 تا 09:45 (سید مهرداد تناوش) - 3.0 واحد
-
-يكشنبه:
-زبان‌ تخصصی‌: يكشنبه  از 15:40 تا 18:10 (سیدرضا وزیری یزدی) - 2.0 واحد
-نظریه زبان‌ها و ماشین‌ها: يكشنبه  از 07:15 تا 09:45 (مهرشید جوانبخت) - 3.0 واحد
-
-دوشنبه:
-آزمایشگاه شبکه ‌های‌ کامپیوتری‌: دوشنبه  از 16:20 تا 17:50 (تورج بنی رستم) - 1.0 واحد
-آزمایشگاه شبکه ‌های‌ کامپیوتری‌: دوشنبه  از 14:40 تا 16:10 (تورج بنی رستم) - 1.0 واحد
-آزمایشگاه شبکه ‌های‌ کامپیوتری‌: دوشنبه  از 13:00 تا 14:30 (تورج بنی رستم) - 1.0 واحد
-مهندسی نرم افزار: دوشنبه  از 07:15 تا 09:45 (مهرشید جوانبخت) - 3.0 واحد
-
-سه شنبه:
-مهندسی نرم افزار: سه شنبه  از 07:15 تا 09:45 (مهرشید جوانبخت) - 3.0 واحد
-
-چهارشنبه:
-تعامل انسان و کامپیوتر: چهارشنبه  از 15:40 تا 16:10 (محمد مهدی متولی) - 3.0 واحد
-
-پنج شنبه:
-آزمایشگاه پایگاه داده: پنج شنبه  از 14:40 تا 16:10 (سيدفريد سيف السادات) - 1.0 واحد
-هوش مصنوعی و سیستم های خبره: پنج شنبه  از 13:00 تا 15:40 (حسین علیزاده) - 3.0 واحد
-```
+Example of `schedule_output.html`:
+- course view:
+![](./photo/sample-output-all-course-view.png)
+- weekly view:
+![](./photo/sample-output-weekly-view.png)
 
 ## Notes
 
 - This script processes all `.html` files in the specified folder. Ensure all the course HTML files are placed within that folder.
-- If no course codes are provided, the script will include all available courses.
 - If the structure of the HTML files in Amozeshyar changes, or if there are issues with the HTML files, the script may not work as expected.
