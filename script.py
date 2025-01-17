@@ -250,7 +250,7 @@ def write_schedule_to_file(weekly_schedule, output_file):
         </style>
     </head>
     <body>
-    <h1>لیست دروس ارائه شده ترم 4032، گروه کامپیوتر تهران مرکز</h1>
+    <h1>لیست دروس ارائه شده ترم 4032، گروه مهندسی کامپیوتر تهران مرکز</h1>
     <div class="container">
         <div class="controls">
             <div class="view-controls">
