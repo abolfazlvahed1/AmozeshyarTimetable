@@ -250,7 +250,7 @@ def write_schedule_to_file(weekly_schedule, output_file):
         </style>
     </head>
     <body>
-    <h1>لیست دروس ارائه شده ترم 4032، گروه مهندسی کامپیوتر تهران مرکز</h1>
+    <h1>لیست دروس ارائه شده</h1>
     <div class="container">
         <div class="controls">
             <div class="view-controls">
@@ -330,9 +330,6 @@ def write_schedule_to_file(weekly_schedule, output_file):
     html_content += """
         </div>
     </div>
-    <p dir=ltr style="text-align: center;">
-    © Abolfazl Vahed, 2025. All rights reserved.
-    </p>
     <p dir="ltr" style="text-align: center;">
     <a href="https://github.com/abolfazlvahed1/AmozeshyarTimetable">View the Repository on GitHub</a>
     </p>
