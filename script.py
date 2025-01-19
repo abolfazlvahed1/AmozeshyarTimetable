@@ -73,6 +73,10 @@ def parse_html_files(folder_path):
             "class_code": headers.index("كد ارائه کلاس درس"),
             "exam": headers.index("زمان امتحان"),
             "place": headers.index("مكان برگزاري"),
+            "group_code": headers.index("گروه آموزشی"),
+            "faculty_code": headers.index("دانشکده"),
+            "branch_code": headers.index("واحد"),
+            "province_code": headers.index("استان"),
         }
     except ValueError as e:
         print(f"Required column not found in headers: {e}")
@@ -82,7 +86,6 @@ def parse_html_files(folder_path):
     for row in data_rows:
         if len(row) > max(columns.values()):
             course_code = row[columns["course_code"]]
-            
             try:
                 theory_units = float(row[columns["theory_units"]] or 0)
                 practical_units = float(row[columns["practical_units"]] or 0)
@@ -90,6 +93,7 @@ def parse_html_files(folder_path):
             except ValueError:
                 print(f"Invalid unit data for course {course_code}")
                 continue
+            
 
             filtered_courses.append({
                     "course_code": course_code,
@@ -259,11 +263,11 @@ def write_schedule_to_file(weekly_schedule, output_file):
             </div>
             <div class="filter-controls">
                 <div class="help-text">
-                    برای فیلتر کردن، کد درس یا نام درس را وارد کنید. برای چندین مورد از خط تیره (-) استفاده کنید.
+                    برای فیلتر کردن، کد درس یا نام درس یا نام استاد را وارد کنید. برای چندین مورد از خط تیره (-) استفاده کنید.
                     <br>
-                    مثال: 4628101485 - ریاضی
+                    مثال: -احمدی - 4628101485 - ریاضی
                 </div>
-                <input type="text" id="filterInput" placeholder="فیلتر بر اساس کد یا نام درس..." oninput="filterCourses()">
+                <input type="text" id="filterInput" placeholder="فیلتر بر اساس کد یا نام درس یا نام استاد..." oninput="filterCourses()">
             </div>
         </div>
 
@@ -294,12 +298,15 @@ def write_schedule_to_file(weekly_schedule, output_file):
                         <th>کد ارائه</th>
                         <th>زمان امتحان</th>
                         <th>مکان برگزاری</th>
+                        <th>شماره<th>
+
                     </tr>
                 </thead>
                 <tbody>
     """
 
     # Add all courses in one table
+    i=1
     for course in all_courses:
         html_content += f"""
             <tr>
@@ -313,9 +320,10 @@ def write_schedule_to_file(weekly_schedule, output_file):
                 <td>{course['class_code']}</td>
                 <td>{course['exam']}</td>
                 <td>{course['place']}</td>
-
+                <td>{i}</td>
             </tr>
         """
+        i+=1
 
     html_content += """
                 </tbody>
