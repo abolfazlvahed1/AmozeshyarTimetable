@@ -26,7 +26,7 @@ To use this script, follow these steps:
 git clone https://github.com/abolfazlvahed1/AmozeshyarTimetable.git
 ```
 2. **Download HTML Files**: 
-   If you are part of the computer group of Tehran Markaz, all offered courses have already been downloaded for you, so you can skip this step.
+   If you are part of the computer group of Tehran Markaz, all offered courses have already been downloaded for you, so you can go [here](https://abolfazlvahed1.github.io)
 
    For others, visit https://eserv.iau.ir/EServices/pSearchAction.do, search for your group's offered courses, and download all HTML files. If there are multiple pages, ensure you download all of them.
   
