@@ -106,6 +106,7 @@ def parse_html_files(folder_path):
                     "class_code": row[columns["class_code"]] or "  ",
                     "exam": row[columns["exam"]] or "  ",
                     "place": row[columns["place"]] or "  ",
+                    "group_code": row[columns["group_code"]] or "  ",
                 })
 
     # Organize courses by weekdays
@@ -263,11 +264,11 @@ def write_schedule_to_file(weekly_schedule, output_file):
             </div>
             <div class="filter-controls">
                 <div class="help-text">
-                    برای فیلتر کردن، کد درس یا نام درس یا نام استاد را وارد کنید. برای چندین مورد از خط تیره (-) استفاده کنید.
+                    برای فیلتر کردن، کد درس یا نام درس یا نام استاد یا کد گروه آموزشي را وارد کنید. برای چندین مورد از خط تیره (-) استفاده کنید.
                     <br>
-                    مثال: -احمدی - 4628101485 - ریاضی
+                    مثال: احمدی - 4628101485 - 2110130 - ریاضی
                 </div>
-                <input type="text" id="filterInput" placeholder="فیلتر بر اساس کد یا نام درس یا نام استاد..." oninput="filterCourses()">
+                <input type="text" id="filterInput" placeholder="فیلتر بر اساس کد یا نام درس یا نام استاد یا کد گروه آموزشی..." oninput="filterCourses()">
             </div>
         </div>
 
@@ -298,6 +299,7 @@ def write_schedule_to_file(weekly_schedule, output_file):
                         <th>کد ارائه</th>
                         <th>زمان امتحان</th>
                         <th>مکان برگزاری</th>
+                        <th>گروه آموزشي</th>
                         <th>شماره<th>
 
                     </tr>
@@ -320,6 +322,7 @@ def write_schedule_to_file(weekly_schedule, output_file):
                 <td>{course['class_code']}</td>
                 <td>{course['exam']}</td>
                 <td>{course['place']}</td>
+                <td>{course['group_code']}</td>
                 <td>{i}</td>
             </tr>
         """
@@ -421,6 +424,7 @@ def create_table(courses):
             <th>کد ارائه</th>
             <th>زمان امتحان</th>
             <th>مکان برگزاری</th>
+            <th>گروه آموزشي</th>
         </tr>
         {''.join(f"""
         <tr>
@@ -434,6 +438,7 @@ def create_table(courses):
             <td>{course['class_code']}</td>
             <td>{course['exam']}</td>
             <td>{course['place']}</td>
+            <td>{course['group_code']}</td>
         </tr>
         """ for course in courses)}
     </table>
