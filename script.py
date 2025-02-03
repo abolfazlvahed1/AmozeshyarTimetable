@@ -1,13 +1,25 @@
 import os
 from bs4 import BeautifulSoup
 from collections import defaultdict
-
+import jdatetime
 
 # Mapping of abbreviated day names to full names for "سه" and "پنج"
 day_mapping = {
     "سه": "سه شنبه",
     "پنج": "پنج شنبه"
 }
+
+
+def get_jalali_date():
+    # Get today's Jalali date
+    jalali_date = jdatetime.date.today()
+    # Format the date as "day month_name year"
+    months = [
+        "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", 
+        "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
+    ]
+    formatted_date = f"{jalali_date.day} {months[jalali_date.month - 1]} {jalali_date.year}"
+    return formatted_date
 
 def parse_html_files(folder_path):
     """
@@ -155,6 +167,8 @@ def write_schedule_to_file(weekly_schedule, output_file):
     # Sort all courses by name
     all_courses.sort(key=lambda x: x['course_name'])
 
+    date=get_jalali_date()
+
     # HTML content
     html_content = """
     <!DOCTYPE html>
@@ -256,6 +270,7 @@ def write_schedule_to_file(weekly_schedule, output_file):
     </head>
     <body>
     <h1>لیست دروس ارائه شده</h1>
+    <h3>اخرین بروزرسانی: {date}</h3>
     <div class="container">
         <div class="controls">
             <div class="view-controls">
@@ -274,6 +289,129 @@ def write_schedule_to_file(weekly_schedule, output_file):
 
         <div id="weeklyView" class="view active">
     """
+     # HTML content
+    html_content = """
+    <!DOCTYPE html>
+    <html dir="rtl" lang="fa">
+    <head>
+        <meta charset="UTF-8">
+        <title>برنامه کلاس‌ها</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                background-color: #f5f5f5;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                background-color: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .controls {
+                margin-bottom: 20px;
+                padding: 15px;
+                background-color: #f8f9fa;
+                border-radius: 5px;
+            }
+            .view-controls {
+                margin-bottom: 15px;
+            }
+            .filter-controls {
+                margin-bottom: 15px;
+            }
+            input[type="text"] {
+                width: 100%;
+                padding: 8px;
+                margin-bottom: 10px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+            .button {
+                padding: 8px 15px;
+                margin-right: 10px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                background-color: #007bff;
+                color: white;
+            }
+            .button:hover {
+                background-color: #0056b3;
+            }
+            .button.active {
+                background-color: #0056b3;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin: 20px 0;
+                background-color: white;
+            }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 12px 8px;
+                text-align: right;
+            }
+            th {
+                background-color: #f2f2f2;
+                position: sticky;
+                top: 0;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .view {
+                display: none;
+            }
+            .view.active {
+                display: block;
+            }
+            h2 {
+                color: #333;
+                margin-top: 20px;
+                border-bottom: 2px solid #007bff;
+                padding-bottom: 5px;
+            }
+            .help-text {
+                color: #666;
+                font-size: 0.9em;
+                margin-bottom: 10px;
+            }
+            .course-group {
+                margin-bottom: 30px;
+            }
+            .hidden {
+                display: none !important;
+            }
+        </style>
+    </head>
+    <body>
+    <h1>لیست دروس ارائه شده</h1>
+    """
+    body_html=f"""
+    <h3>اخرین بروزرسانی: {date}</h3>
+    <div class="container">
+        <div class="controls">
+            <div class="view-controls">
+                <button class="button active" onclick="switchView('weekly')">نمایش هفتگی</button>
+                <button class="button" onclick="switchView('all')">نمایش همه دروس</button>
+            </div>
+            <div class="filter-controls">
+                <div class="help-text">
+                    برای فیلتر کردن، کد درس یا نام درس یا نام استاد یا کد گروه آموزشي را وارد کنید. برای چندین مورد از خط تیره (-) استفاده کنید.
+                    <br>
+                    مثال: احمدی - 4628101485 - 2110130 - ریاضی
+                </div>
+                <input type="text" id="filterInput" placeholder="فیلتر بر اساس کد یا نام درس یا نام استاد یا کد گروه آموزشی..." oninput="filterCourses()">
+            </div>
+        </div>
+
+        <div id="weeklyView" class="view active">
+    """
+    html_content = html_content+body_html
 
     # Add weekly view content
     for day, courses in weekly_schedule.items():
