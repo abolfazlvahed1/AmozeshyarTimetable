@@ -80,6 +80,7 @@ def parse_html_files(folder_path):
             "professor": headers.index("استاد"),
             "theory_units": headers.index("تعداد واحد نظري"),
             "practical_units": headers.index("تعداد واحد عملي"),
+            "capacity": headers.index("حداكثر ظرفيت"),
             "class_name": headers.index("نام كلاس درس"),
             "section": headers.index("مقطع ارائه درس"),
             "class_code": headers.index("كد ارائه کلاس درس"),
@@ -113,6 +114,7 @@ def parse_html_files(folder_path):
                     "day_time": row[columns["day_time"]] or "زمان نامشخص",
                     "professor": row[columns["professor"]] or "  ",
                     "total_units": total_units,
+                    "capacity": row[columns["capacity"]] or "  ",
                     "class_name": row[columns["class_name"]] or "  ",
                     "section": row[columns["section"]] or "  ",
                     "class_code": row[columns["class_code"]] or "  ",
@@ -432,6 +434,7 @@ def write_schedule_to_file(weekly_schedule, output_file):
                         <th>زمان کلاس</th>
                         <th>استاد</th>
                         <th>تعداد واحد</th>
+                        <th>حداکثر ظرفیت</th>
                         <th>نام کلاس</th>
                         <th>مقطع</th>
                         <th>کد ارائه</th>
@@ -455,6 +458,7 @@ def write_schedule_to_file(weekly_schedule, output_file):
                 <td>{course['day_time']}</td>
                 <td>{course['professor']}</td>
                 <td>{course['total_units']}</td>
+                <td>{course['capacity']}</td>
                 <td>{course['class_name']}</td>
                 <td>{course['section']}</td>
                 <td>{course['class_code']}</td>
@@ -557,6 +561,7 @@ def create_table(courses):
             <th>زمان کلاس</th>
             <th>استاد</th>
             <th>تعداد واحد</th>
+            <th>حداكثر ظرفيت</th>
             <th>نام کلاس</th>
             <th>مقطع</th>
             <th>کد ارائه</th>
@@ -571,6 +576,7 @@ def create_table(courses):
             <td>{course['day_time']}</td>
             <td>{course['professor']}</td>
             <td>{course['total_units']}</td>
+            <td>{course['capacity']}</td>
             <td>{course['class_name']}</td>
             <td>{course['section']}</td>
             <td>{course['class_code']}</td>
