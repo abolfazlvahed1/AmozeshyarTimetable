@@ -394,6 +394,18 @@ def write_schedule_to_file(weekly_schedule, output_file):
     <h1>لیست دروس ارائه شده</h1>
     """
     body_html=f"""
+<a href="https://abolfazlvahed1.github.io/" style="
+    position: fixed; 
+    top: 20px; 
+    left: 20px; 
+    background-color: #007bff; 
+    color: white; 
+    padding: 10px 20px; 
+    border-radius: 5px; 
+    text-decoration: none; 
+    font-size: 16px;">
+    بازگشت به صفحه اصلی
+</a>
     <h3>اخرین بروزرسانی: {date}</h3>
     <div class="container">
         <div class="controls">
